@@ -22,9 +22,9 @@ WP Sticky Header is the plugin to display some content/notification bar on top o
 
 2.Activate the plugin through the 'Plugins' menu in WordPress
 
-3. In the dashboard you will get WP Sticky Header settings.
+3.In the dashboard you will get WP Sticky Header settings.
 
-4 Click on it and custmomize the notification bar.
+4.Click on it and custmomize the notification bar.
 
 
 == Frequently Asked Questions ==
