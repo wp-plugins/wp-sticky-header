@@ -1,4 +1,4 @@
-=== Bake Posts ===
+=== WP Sticky Header ===
 Contributors: wpnaga
 Donate link: http://www.geeks.gallery
 Tags: notification, top,header,close,content,sticky
