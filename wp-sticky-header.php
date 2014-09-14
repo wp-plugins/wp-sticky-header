@@ -3,7 +3,7 @@
  * Plugin Name: WP Sticky Header
  * Plugin URI: http://wordpress.org/plugins/wp-sticky-header/
  * Description: Plugin to display some content/notification on top of the webpage.
- * Version: 1.0
+ * Version: 1.01
  * Author: wpnaga
  * Author URI: http://profiles.wordpress.org/wpnaga/
  * License: GPL2
@@ -123,6 +123,7 @@ function wpsh_custom_styles(){ ?>
 			font-weight:bold;
 			width: 100%;
 			box-shadow: 5px 5px 5px 5px #888888;
+			z-index:10001;
 		} 
 	<?php if(esc_attr(get_option('wpsh_closable')) == 1) { ?>
 		.wpsh_close{
