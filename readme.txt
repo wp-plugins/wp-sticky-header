@@ -49,8 +49,8 @@ Yes.
 
 == Changelog ==
 
-= 1.0 =
-* Displays Notification bar on top of All / Home page.
+= 1.02 =
+* Displays Notification bar on top of All / Home page / Single posts page.
 * Color picker option to set text and background color.
 * Option to close notification bar
 * HTML content can also be used.

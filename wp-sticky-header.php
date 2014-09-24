@@ -3,7 +3,7 @@
  * Plugin Name: WP Sticky Header
  * Plugin URI: http://wordpress.org/plugins/wp-sticky-header/
  * Description: Plugin to display some content/notification on top of the webpage.
- * Version: 1.01
+ * Version: 1.02
  * Author: wpnaga
  * Author URI: http://profiles.wordpress.org/wpnaga/
  * License: GPL2
@@ -59,7 +59,8 @@ function wpsh_settings_page() {
 		<tr valign="top">
         <th scope="row">Where to Display?</th>
         <td><input type="radio" name="wpsh_where" value="home" <?php if(esc_attr( get_option('wpsh_where')) == "home") echo "checked"; ?> /><b>In home page</b> 
-		<br><input type="radio" name="wpsh_where" value="all" <?php if(esc_attr( get_option('wpsh_where')) == "all") echo "checked"; ?> /><b>In all pages</b></td>
+		<br><input type="radio" name="wpsh_where" value="all" <?php if(esc_attr( get_option('wpsh_where')) == "all") echo "checked"; ?> /><b>In all pages</b>
+		<br><input type="radio" name="wpsh_where" value="posts" <?php if(esc_attr( get_option('wpsh_where')) == "posts") echo "checked"; ?> /><b>In all posts</b></td>
         </tr>
         
         <tr valign="top">
@@ -81,9 +82,13 @@ function show_wpsh_header(){
 		echo wpsh_filtered_content();
 	}
 	else{
-		if(is_home()){
+		if(($where == "home") && (is_home())){
 			echo wpsh_filtered_content();
 		}
+		if(($where == "posts") && (is_single())){
+			echo wpsh_filtered_content();
+		}
+		
 	}
 }
 
