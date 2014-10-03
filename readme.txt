@@ -12,7 +12,7 @@ Plugin to display some content/notification on top of the webpage.
 
 == Description ==
 
-WP Sticky Header is the plugin to display some content/notification bar on top of the webpage. It can be closed and the colour of the background and text colour can be modified. Notification bar can be shown on all pages or only in home page. Once installed and activated, settings menu will appear on the dashboard. One can customize the notifications bar.
+WP Sticky Header is the plugin to display some content/notification bar on top of the pages. It can be closed and the colour of the background and text colour can be modified. Notification bar can be shown on all pages or only in home page or in all posts or in selected pages / posts. Once installed and activated, settings menu will appear on the dashboard. One can customize the notifications bar.
 
 
 
@@ -49,8 +49,8 @@ Yes.
 
 == Changelog ==
 
-= 1.02 =
-* Displays Notification bar on top of All / Home page / Single posts page.
+= 1.2 =
+* Displays Notification bar on top of All / Home page / Single posts page / In selected pages,posts.
 * Color picker option to set text and background color.
 * Option to close notification bar
 * HTML content can also be used.

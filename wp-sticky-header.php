@@ -3,7 +3,7 @@
  * Plugin Name: WP Sticky Header
  * Plugin URI: http://wordpress.org/plugins/wp-sticky-header/
  * Description: Plugin to display some content/notification on top of the webpage.
- * Version: 1.02
+ * Version: 1.2
  * Author: wpnaga
  * Author URI: http://profiles.wordpress.org/wpnaga/
  * License: GPL2
@@ -29,7 +29,8 @@ function register_mysettings() {
 	register_setting( 'wpsh-settings-group', 'wpsh_text_color' );
 	register_setting( 'wpsh-settings-group', 'wpsh_closable' );
 	register_setting( 'wpsh-settings-group', 'wpsh_content' );
-	register_setting( 'wpsh-settings-group', 'wpsh_where' );
+	register_setting( 'wpsh-settings-group', 'wpsh_where' );  
+	register_setting( 'wpsh-settings-group', 'wpsh_page_ids' );
 }
 
 function wpsh_settings_page() {
@@ -58,18 +59,32 @@ function wpsh_settings_page() {
 		
 		<tr valign="top">
         <th scope="row">Where to Display?</th>
-        <td><input type="radio" name="wpsh_where" value="home" <?php if(esc_attr( get_option('wpsh_where')) == "home") echo "checked"; ?> /><b>In home page</b> 
-		<br><input type="radio" name="wpsh_where" value="all" <?php if(esc_attr( get_option('wpsh_where')) == "all") echo "checked"; ?> /><b>In all pages</b>
-		<br><input type="radio" name="wpsh_where" value="posts" <?php if(esc_attr( get_option('wpsh_where')) == "posts") echo "checked"; ?> /><b>In all posts</b></td>
+        <td><input type="radio" class="display" name="wpsh_where" value="home" <?php if(esc_attr( get_option('wpsh_where')) == "home") echo "checked"; ?> /><b>In home page</b> 
+		<br><input type="radio" class="display" name="wpsh_where" value="all" <?php if(esc_attr( get_option('wpsh_where')) == "all") echo "checked"; ?> /><b>In all pages</b>
+		<br><input type="radio" class="display" name="wpsh_where" value="posts" <?php if(esc_attr( get_option('wpsh_where')) == "posts") echo "checked"; ?> /><b>In all posts</b>
+		<br><input type="radio" class="display" name="wpsh_where" value="selected" <?php if(esc_attr( get_option('wpsh_where')) == "selected") echo "checked"; ?> /><b>In Selected pages / posts</b> 
+			<div class="pageids" style="display:none;margin-left:25px;">
+				<input type="text" name="wpsh_page_ids" value="<?php echo esc_attr( get_option('wpsh_page_ids') ); ?>" placeholder="Enter page ids" />&nbsp;(enter page/posts ids seperated by commas ,)
+			</div>
+		</td>
         </tr>
         
         <tr valign="top">
         <th scope="row">Content</th>
-        <td><textarea name="wpsh_content" style="resize:none" ><?php echo esc_attr( get_option('wpsh_content') ); ?></textarea> &nbsp;&nbsp;content of the header</td>
+        <td><textarea name="wpsh_content" style="resize:none" ><?php echo esc_attr( get_option('wpsh_content') ); ?></textarea> <span style="vertical-align:top;padding-top:5px;">&nbsp;content of the header</span></td>
         </tr>
     </table>
     
     <?php submit_button(); ?>
+	
+	<br><br>
+	<p><b>Help : </b> <a id="help" href="#">How to find page / post ids?</a> (for Selected pages/ posts option)</p>
+	<div class="showhelp" style="display:none;">
+		<p><b>Step 1</b>: Login to your admin account and in dashboard select page option</p>
+		<img src="<?php echo plugins_url('/images/help1.png', __FILE__); ?>" style="padding:10px;border:1px solid #ccc;">
+		<p><b>Step 2</b>: Edit the page(to get ID), on address bar you can find the ID</p>
+		<img src="<?php echo plugins_url('/images/help2.png', __FILE__); ?>" style="padding:10px;border:1px solid #ccc;">
+	</div>
 
 </form>
 </div>
@@ -87,6 +102,17 @@ function show_wpsh_header(){
 		}
 		if(($where == "posts") && (is_single())){
 			echo wpsh_filtered_content();
+		}
+		if($where == "selected"){
+			$pages = explode(',',esc_attr( get_option('wpsh_page_ids')));
+			$isPage = false;
+			foreach($pages as $page){
+				if(is_page($pages) || is_single($pages)){
+					$isPage = true;
+				}	
+			}
+			if($isPage == true)
+				echo wpsh_filtered_content();
 		}
 		
 	}
@@ -147,6 +173,18 @@ function wpsh_custom_styles(){ ?>
 	</style>
 <?php }
 
+add_action( 'admin_init', 'wpsh_admin_init' );
+
+function wpsh_admin_init() {
+    /* Register our script. */
+    wp_register_script( 'wpsh-script', plugins_url( 'js/wpsh-adminjs.js', __FILE__ ) );
+	wp_enqueue_script( 'wpsh-script' );
+}
+
+function wpsh_admin_scripts() {
+    /* Link our already registered script to a page */
+    wp_enqueue_script( 'wpsh-script' );
+} 
 
 /* Installation and Un-installation part */
 register_activation_hook(__FILE__, 'wpsh_install');
