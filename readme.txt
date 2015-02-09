@@ -41,6 +41,10 @@ Content can be changed in the settings page.
 
 Yes.
 
+= Is it possible to position the content on bottom? =
+
+Yes. You can change the position to top/bottom in the plugins settings panel.
+
 == Screenshots ==
 
 1. Screenshot of Settings page.
