@@ -3,7 +3,7 @@
  * Plugin Name: WP Sticky Header
  * Plugin URI: http://wordpress.org/plugins/wp-sticky-header/
  * Description: Plugin to display some content/notification on top of the webpage.
- * Version: 1.2
+ * Version: 1.3
  * Author: wpnaga
  * Author URI: http://profiles.wordpress.org/wpnaga/
  * License: GPL2
@@ -28,6 +28,7 @@ function register_mysettings() {
 	register_setting( 'wpsh-settings-group', 'wpsh_bg_color' );
 	register_setting( 'wpsh-settings-group', 'wpsh_text_color' );
 	register_setting( 'wpsh-settings-group', 'wpsh_closable' );
+	register_setting( 'wpsh-settings-group', 'wpsh_position' );
 	register_setting( 'wpsh-settings-group', 'wpsh_content' );
 	register_setting( 'wpsh-settings-group', 'wpsh_where' );  
 	register_setting( 'wpsh-settings-group', 'wpsh_page_ids' );
@@ -55,6 +56,14 @@ function wpsh_settings_page() {
 		<tr valign="top">
         <th scope="row">Is Closable?</th>
         <td><input type="checkbox" name="wpsh_closable" value="1" <?php if(esc_attr( get_option('wpsh_closable'))) echo "checked"; ?> /> &nbsp;&nbsp;can the viewer close the header?</td>
+        </tr>
+		
+		<tr valign="top">
+        <th scope="row">Position</th>
+        <td>
+			<p><input type="radio" class="display" name="wpsh_position" value="top" <?php if(esc_attr( get_option('wpsh_position')) == "top") echo "checked"; ?> /><b>Top</b> </p>
+			<p><input type="radio" class="display" name="wpsh_position" value="bottom" <?php if(esc_attr( get_option('wpsh_position')) == "bottom") echo "checked"; ?> /><b>Bottom</b> </p>
+		</td>
         </tr>
 		
 		<tr valign="top">
@@ -150,7 +159,7 @@ function wpsh_custom_styles(){ ?>
 			padding: 20px;
 			position: fixed;
 			text-align: center;
-			top: 0;
+			<?php if(esc_attr(get_option('wpsh_position')) == 'top') { echo "top: 0;"; } else { echo "bottom:0;"; } ?>
 			font-weight:bold;
 			width: 100%;
 			box-shadow: 5px 5px 5px 5px #888888;
@@ -163,7 +172,6 @@ function wpsh_custom_styles(){ ?>
 			float:right;
 			margin-right:30px;
 			font-weight:bold;
-			padding:5px;
 		}
 		.wpsh_close:hover{
 			opacity:1;
@@ -174,6 +182,7 @@ function wpsh_custom_styles(){ ?>
 <?php }
 
 add_action( 'admin_init', 'wpsh_admin_init' );
+add_action( 'upgrader_process_complete', function() { add_option('wpsh_position','top'); });
 
 function wpsh_admin_init() {
     /* Register our script. */
@@ -200,6 +209,9 @@ function wpsh_install(){
 	if(!get_option('wpsh_closable')){
 		add_option('wpsh_closable','1');
 	}
+	if(!get_option('wpsh_position')){
+		add_option('wpsh_position','top');
+	}
 	if(!get_option('wpsh_content')){
 		add_option('wpsh_content','Thanks for using Sticky Header');
 	}
@@ -213,6 +225,7 @@ function wpsh_uninstall(){
 	delete_option('wpsh_bg_color');
 	delete_option('wpsh_text_color');
 	delete_option('wpsh_closable');
+	delete_option('wpsh_position');
 	delete_option('wpsh_content');
 }
 
