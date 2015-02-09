@@ -8,11 +8,11 @@ Stable tag: 4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Plugin to display some content/notification on top of the webpage.
+Plugin to display some content/notification on top/bottom of the webpage.
 
 == Description ==
 
-WP Sticky Header is the plugin to display some content/notification bar on top of the pages. It can be closed and the colour of the background and text colour can be modified. Notification bar can be shown on all pages or only in home page or in all posts or in selected pages / posts. Once installed and activated, settings menu will appear on the dashboard. One can customize the notifications bar.
+WP Sticky Header is the plugin to display some content/notification bar on top or bottom of the pages. It can be closed and the colour of the background and text colour can be modified. Notification bar can be shown on all pages or only in home page or in all posts or in selected pages / posts. Once installed and activated, settings menu will appear on the dashboard. One can customize the notifications bar.
 
 
 
@@ -49,9 +49,14 @@ Yes. You can change the position to top/bottom in the plugins settings panel.
 
 1. Screenshot of Settings page.
 
-2. Screenshot of Notification bar.
+2. Screenshot of Notification bar on Top.
+
+3. Screenshot of Notification bar on Bottom.
 
 == Changelog ==
+
+= 1.3 =
+* Position changes can be mode. Either on Top or Bottom.
 
 = 1.2 =
 * Displays Notification bar on top of All / Home page / Single posts page / In selected pages,posts.
