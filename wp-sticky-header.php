@@ -3,7 +3,7 @@
  * Plugin Name: WP Sticky Header
  * Plugin URI: http://wordpress.org/plugins/wp-sticky-header/
  * Description: Plugin to display some content/notification on top of the webpage.
- * Version: 1.3
+ * Version: 1.4
  * Author: wpnaga
  * Author URI: http://profiles.wordpress.org/wpnaga/
  * License: GPL2
@@ -30,8 +30,9 @@ function register_mysettings() {
 	register_setting( 'wpsh-settings-group', 'wpsh_closable' );
 	register_setting( 'wpsh-settings-group', 'wpsh_position' );
 	register_setting( 'wpsh-settings-group', 'wpsh_content' );
-	register_setting( 'wpsh-settings-group', 'wpsh_where' );  
-	register_setting( 'wpsh-settings-group', 'wpsh_page_ids' );
+	register_setting( 'wpsh-settings-group', 'wpsh_where' );
+	register_setting( 'wpsh-settings-group', 'wpsh_auto_close' );	
+	register_setting( 'wpsh-settings-group', 'wpsh_page_ids' );  
 }
 
 function wpsh_settings_page() {
@@ -61,8 +62,8 @@ function wpsh_settings_page() {
 		<tr valign="top">
         <th scope="row">Position</th>
         <td>
-			<p><input type="radio" class="display" name="wpsh_position" value="top" <?php if(esc_attr( get_option('wpsh_position')) == "top") echo "checked"; ?> /><b>Top</b> </p>
-			<p><input type="radio" class="display" name="wpsh_position" value="bottom" <?php if(esc_attr( get_option('wpsh_position')) == "bottom") echo "checked"; ?> /><b>Bottom</b> </p>
+			<p><input type="radio" name="wpsh_position" value="top" <?php if(esc_attr( get_option('wpsh_position')) == "top") echo "checked"; ?> /><b>Top</b> </p>
+			<p><input type="radio" name="wpsh_position" value="bottom" <?php if(esc_attr( get_option('wpsh_position')) == "bottom") echo "checked"; ?> /><b>Bottom</b> </p>
 		</td>
         </tr>
 		
@@ -77,10 +78,15 @@ function wpsh_settings_page() {
 			</div>
 		</td>
         </tr>
+		
+		<tr valign="top">
+        <th scope="row">Close Automatically</th>
+        <td><input type="text" name="wpsh_auto_close" value="<?php echo esc_attr( get_option('wpsh_auto_close') ); ?>" required> <span style="vertical-align:top;padding-top:5px;">&nbsp;(Enter seconds)&nbsp;0 for not closing automatically</span></td>
+        </tr>
         
         <tr valign="top">
         <th scope="row">Content</th>
-        <td><textarea name="wpsh_content" style="resize:none" ><?php echo esc_attr( get_option('wpsh_content') ); ?></textarea> <span style="vertical-align:top;padding-top:5px;">&nbsp;content of the header</span></td>
+        <td><textarea name="wpsh_content" style="resize:none" rows="5" cols="35" required><?php echo esc_attr( get_option('wpsh_content') ); ?></textarea> <span style="vertical-align:top;padding-top:5px;">&nbsp;content of the header</span></td>
         </tr>
     </table>
     
@@ -128,10 +134,16 @@ function show_wpsh_header(){
 }
 
 function wpsh_filtered_content(){
-	wp_enqueue_script( 'wpsh_headerjs', plugins_url('wp-sticky-header/js/wpsh_header.js'), array(), '1.0.0', true );
-		
-	$closable = esc_attr(get_option('wpsh_closable'));
+	wp_enqueue_script( 'wpsh_headerjs', plugins_url('wp-sticky-header/js/wpsh_header.js'), array(), '1.0.0', true );	
+	$auto_close = esc_attr(get_option('wpsh_auto_close'));
+	if($auto_close != 0){
+		wp_register_script( 'wpsh_autoclose', plugins_url('wp-sticky-header/js/wpsh_autoclose.js') );
+		wp_enqueue_script( 'wpsh_autoclose');
+		$array_val = array( 'close_seconds' => $auto_close );
+		wp_localize_script( 'wpsh_autoclose', 'php_vars', $array_val );
+	}
 	$header_content = get_option('wpsh_content');
+	$closable = esc_attr(get_option('wpsh_closable'));
 	if($closable == 1){
 		$output = "<div class='wpsh_fixed'>".$header_content."<span class='wpsh_close'>X</span></div>";
 	}
@@ -179,10 +191,20 @@ function wpsh_custom_styles(){ ?>
 		}
 	<?php } ?>
 	</style>
+	
 <?php }
 
 add_action( 'admin_init', 'wpsh_admin_init' );
-add_action( 'upgrader_process_complete', function() { add_option('wpsh_position','top'); });
+add_action( 'upgrader_process_complete', 'wpsh_plugin_update');
+
+function wpsh_plugin_update() { 
+	if(!get_option('wpsh_position')){
+		add_option('wpsh_position','top'); 
+	}
+	if(!get_option('wpsh_auto_close')){
+		add_option('wpsh_auto_close',0);
+	}	
+}
 
 function wpsh_admin_init() {
     /* Register our script. */
@@ -218,6 +240,9 @@ function wpsh_install(){
 	if(!get_option('wpsh_where')){
 		add_option('wpsh_where','all');
 	}
+	if(!get_option('wpsh_auto_close')){
+		add_option('wpsh_auto_close',0);
+	}
 }
 
 
@@ -227,6 +252,8 @@ function wpsh_uninstall(){
 	delete_option('wpsh_closable');
 	delete_option('wpsh_position');
 	delete_option('wpsh_content');
+	delete_option('wpsh_where');
+	delete_option('wpsh_auto_close');
 }
 
 ?>
